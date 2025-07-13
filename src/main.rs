@@ -1,4 +1,5 @@
 mod database;
+mod gui;
 mod screenshot;
 mod text_processing;
 
@@ -22,6 +23,9 @@ struct Args {
       num_args = 1..,
       help = "Space separated list of keywords to searh for")]
     search: Option<Vec<String>>,
+
+    #[arg(short = 'g', long, help = "Launch GUI application")]
+    gui: bool,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -48,6 +52,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("{}", path);
             }
         }
+    }
+
+    if args.gui {
+        let options = eframe::NativeOptions::default();
+        eframe::run_native(
+            "RCall GUI",
+            options,
+            Box::new(|_cc| Box::new(gui::GUI::new(conn))),
+        )?;
     }
 
     Ok(())

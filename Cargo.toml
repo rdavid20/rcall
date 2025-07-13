@@ -10,3 +10,5 @@ tesseract = "0.15.2"
 rake = "0.1"
 rusqlite = { version = "0.31", features = ["bundled", "modern_sqlite"] }
 clap = { version = "4.4", features = ["derive"] }
+eframe = "0.25"
+image = "0.25"                                                           # For loading image files
