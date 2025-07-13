@@ -7,6 +7,9 @@ use crate::screenshot::capture_screenshot;
 use clap::Parser;
 use rusqlite::{Connection, Result};
 
+use std::env;
+use std::path::PathBuf;
+
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
@@ -31,7 +34,15 @@ struct Args {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
 
-    let conn = Connection::open("images.db")?;
+    let home_dir = env::var("HOME")?;
+    let db_path = PathBuf::from(home_dir)
+        .join(".local")
+        .join("share")
+        .join("rcall")
+        .join("images.db");
+
+    std::fs::create_dir_all(db_path.parent().unwrap())?;
+    let conn = Connection::open(db_path)?;
     database::create_table(&conn)?;
 
     if args.capture {
